@@ -10,6 +10,7 @@ auth_bp = Blueprint('auth', __name__)
 @auth_bp.route('/register', methods=['POST'])
 def register():
     try:
+        print(1)
         data = request.get_json()
         if not data:
             return jsonify({"error": "No se proporcionaron datos"}), 400

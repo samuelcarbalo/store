@@ -1,5 +1,7 @@
 // Función para mostrar el modal de registro
 document.getElementById('register-btn').addEventListener('click', function() {
+  this.disable = true
+  console.log(1)
   var registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
   registerModal.show();
 });

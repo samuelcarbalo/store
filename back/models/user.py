@@ -13,7 +13,7 @@ class User:
     def create_user(email, password, name):
         if db.users.find_one({"email": email}):
             return None  # Usuario ya existe
-        
+        print(2)
         hashed_pw = generate_password_hash(password)
         user = {
             "email": email,
@@ -23,6 +23,7 @@ class User:
         }
         
         result = db.users.insert_one(user)
+        print(str(result.inserted_id))
         return str(result.inserted_id)
 
     @staticmethod
