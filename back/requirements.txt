@@ -1,0 +1,11 @@
+flask
+flask-cors
+pymongo
+python-dotenv
+bcrypt
+pyjwt
+flask-session
+cryptography
+pandas
+Werkzeug
+openpyxl

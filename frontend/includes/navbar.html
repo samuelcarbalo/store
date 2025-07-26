@@ -1,0 +1,41 @@
+<nav class="navbar navbar-expand-lg navbar-white bg-white shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="#">
+      <i class="fas fa-running me-2"></i>SportsWeb
+    </a>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarContent"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link" href="#">Fútbol</a></li>
+        <li id="admin-tab" class="nav-item" style="display: none">
+          <a class="nav-link text-danger fw-bold" href="#">
+            <i class="fas fa-crown me-1"></i> Administrador
+          </a>
+        </li>
+      </ul>
+
+      <div class="d-flex align-items-center">
+        <div id="guest-actions">
+          <button id="login-btn" class="btn btn-outline-primary me-2">
+            Iniciar Sesión
+          </button>
+          <button id="register-btn" class="btn btn-primary">Registrarse</button>
+        </div>
+
+        <div id="user-actions" style="display: none">
+          <span class="me-3 fw-bold" id="username-display"></span>
+          <button id="logout-btn" class="btn btn-danger">Cerrar Sesión</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

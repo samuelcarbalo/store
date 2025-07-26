@@ -1,0 +1,100 @@
+{% extends "templates/base.html" %}
+
+{% block title %}Administrador{% endblock %}
+
+{% block content %}
+    <!-- Contenido principal -->
+    <div class="container mt-4">
+        <h2>Configuración del equipo: </h2>
+                
+        <!-- Barra de navegación entre secciones -->
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+                <a class="nav-link active" id="equipos-tab" href="#equipos" data-bs-toggle="tab">Equipo</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="calendario-tab" href="#calendario" data-bs-toggle="tab">Calendario</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="clasificacion-tab" href="#clasificacion" data-bs-toggle="tab">Clasificación</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="estadisticas-tab" href="#estadisticas" data-bs-toggle="tab">Estadísticas</a>
+            </li>
+        </ul>
+        
+        <!-- Contenido de las pestañas -->
+        <div class="tab-content">
+            <!-- Pestaña de Equipos -->
+
+            <div class="tab-pane fade show active" id="equipos">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>Lista de Jugadores</h5>
+                        <span id="torneo-id" class="badge bg-primary"></span>
+                    </div>
+                    <div class="card-body">
+                        <div id="equipos-container">
+                            <!-- Aquí se cargará dinámicamente la tabla de equipos -->
+                            <div class="text-center my-4" id="loading-equipos">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Cargando...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Otras pestañas (inicialmente vacías) -->
+            <div class="tab-pane fade" id="calendario">
+                <div class="alert alert-info">Configuración de calendario</div>
+            </div>
+            <div class="tab-pane fade" id="clasificacion">
+                <div class="alert alert-info">Configuración de clasificación</div>
+            </div>
+            <div class="tab-pane fade" id="estadisticas">
+                <div class="alert alert-info">Configuración de estadísticas</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar jugador -->
+    <div class="modal fade" id="editarJugadorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalJugadorTitle">Editar Jugador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-editar-jugador">
+                        <input type="hidden" id="player-id">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="player-name" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control mb-2" id="player-age" placeholder="Edad">
+                            <input type="tel" class="form-control mb-2" id="player-phone" placeholder="Teléfono">
+                            <input type="email" class="form-control mb-2" id="player-email" placeholder="Email">
+                            <input type="text" class="form-control mb-2" id="player-document" placeholder="Document">
+                            <input type="date" class="form-control mb-2" id="player-date_birth" placeholder="Fecha de Nacimiento">
+                            <input type="text" class="form-control mb-2" id="player-number" placeholder="Numero">
+                            <input type="text" class="form-control mb-2" id="player-veteran" placeholder="Veterano">
+                            <input type="text" class="form-control mb-2" id="player-guest_church" placeholder="Iglesia">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btn-guardar-jugador">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <!-- Scripts específicos para la home -->
+    <script src="{{ url_for('static', filename='js/plantilla.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends "templates/base.html" %}
+
+{% block title %}Configuración{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>Configuración del Torneo: </h2>
+                
+        <!-- Barra de navegación entre secciones -->
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+                <a class="nav-link active" id="equipos-tab" href="#equipos" data-bs-toggle="tab">Equipos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="calendario-tab" href="#calendario" data-bs-toggle="tab">Calendario</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="clasificacion-tab" href="#clasificacion" data-bs-toggle="tab">Clasificación</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="estadisticas-tab" href="#estadisticas" data-bs-toggle="tab">Estadísticas</a>
+            </li>
+        </ul>
+        
+        <!-- Contenido de las pestañas -->
+        <div class="tab-content">
+            <!-- Pestaña de Equipos -->
+
+            <div class="tab-pane fade show active" id="equipos">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>Lista de Equipos</h5>
+                        <span id="torneo-id" class="badge bg-primary"></span>
+                    </div>
+                    <div class="card-body">
+                        <div id="equipos-container">
+                            <!-- Aquí se cargará dinámicamente la tabla de equipos -->
+                            <div class="text-center my-4" id="loading-equipos">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Cargando...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Otras pestañas (inicialmente vacías) -->
+            <div class="tab-pane fade" id="calendario">
+                <div class="alert alert-info">Configuración de calendario</div>
+            </div>
+            <!-- calendario  -->
+            <div class="tab-pane fade" id="clasificacion">
+                <div class="d-flex justify-content-end mb-3">
+                    <button class="btn btn-primary" id="btn-generar-siguiente-grupos" style="display: none;">
+                        <i class="fas fa-cogs me-2"></i>Generar/Regenerar Siguiente Fase Grupos
+                    </button>
+                    <button class="btn btn-primary" id="btn-generar-grupos">
+                        <i class="fas fa-cogs me-2"></i>Generar/Regenerar Grupos
+                    </button>
+                </div>
+                <div id="grupos-container">
+                    <!-- Los grupos generados se mostrarán aquí -->
+                    <div class="text-center my-4" id="loading-grupos" style="display: none;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="estadisticas">
+                <div class="alert alert-info">Configuración de estadísticas</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar equipo -->
+    <div class="modal fade" id="editarEquipoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEquipoTitle">Editar Equipo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form-editar-equipo">
+                        <input type="hidden" id="equipo-id">
+                        <div class="mb-3">
+                            <label for="equipo-nombre" class="form-label">Nombre del Equipo</label>
+                            <input type="text" class="form-control" id="equipo-nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="equipo-logo" class="form-label">URL del Logo</label>
+                            <input type="url" class="form-control" id="equipo-logo">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Representante</label>
+                            <input type="text" class="form-control mb-2" id="representante-nombre" placeholder="Nombre">
+                            <input type="email" class="form-control mb-2" id="representante-email" placeholder="Email">
+                            <input type="tel" class="form-control" id="representante-telefono" placeholder="Teléfono">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btn-guardar-equipo">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extra_js %}
+    <!-- Scripts específicos para la home -->
+    <script src="{{ url_for('static', filename='js/config.js') }}"></script>
+{% endblock %}

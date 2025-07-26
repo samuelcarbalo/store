@@ -1,0 +1,222 @@
+{% extends "templates/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Configuración del Torneo</h2>
+    <form id="edit-torneo-form">
+        <input type="hidden" id="torneo-id">
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">Información General del Torneo</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="nombreTorneo" class="form-label">Nombre del Torneo</label>
+                            <input type="text" class="form-control" id="nombreTorneo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="deporteJuego" class="form-label">Deporte/Juego</label>
+                            <input type="text" class="form-control" id="deporteJuego" placeholder="Ej: Fútbol, Baloncesto, League of Legends" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="subtipoDeporte" class="form-label">Modalidad/Subtipo</label>
+                            <select class="form-select" id="subtipoDeporte" required>
+                                <option value="" disabled selected>Selecciona una modalidad</option>
+                                <option value="11">Fútbol 11</option>
+                                <option value="10">Fútbol 10</option>
+                                <option value="9">Fútbol 9</option>
+                                <option value="8">Fútbol 8</option>
+                                <option value="7">Fútbol 7</option>
+                                <option value="6">Fútbol 6</option>
+                                <option value="Sala">Fútbol Sala</option>
+                                <option value="3v3">Baloncesto 3v3</option>
+                                <option value="5v5">Baloncesto 5v5</option>
+                                </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="urlImagen" class="form-label">URL de la Imagen/Logo del Torneo (Opcional)</label>
+                            <input type="url" class="form-control" id="urlImagen">
+                        </div>
+                        <div class="mb-3">
+                            <label for="cupoEquipos" class="form-label">Cupo Máximo de Equipos</label>
+                            <input type="number" class="form-control" id="cupoEquipos" min="2" max="128" value="16" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="costoInscripcion" class="form-label">Costo de Inscripción por Equipo (COP)</label>
+                            <input type="number" class="form-control" id="costoInscripcion" min="0" value="0" step="1000">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">Fechas y Ubicación</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
+                            <input type="date" class="form-control" id="fechaInicio" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fechaFin" class="form-label">Fecha de Fin (Estimada)</label>
+                            <input type="date" class="form-control" id="fechaFin">
+                        </div>
+                        <div class="mb-3">
+                            <label for="fechaLimiteInscripcion" class="form-label">Fecha Límite de Inscripción</label>
+                            <input type="date" class="form-control" id="fechaLimiteInscripcion" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="lugarTorneo" class="form-label">Lugar del Torneo</label>
+                            <input type="text" class="form-control" id="lugarTorneo" placeholder="Ej: Canchas Deportivas La Esperanza" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="urlReglamento" class="form-label">URL del Reglamento (Opcional)</label>
+                            <input type="url" class="form-control" id="urlReglamento" placeholder="Ej: https://tudominio.com/reglamento.pdf">
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactoOrganizador" class="form-label">Contacto del Organizador (Email o Teléfono)</label>
+                            <input type="text" class="form-control" id="contactoOrganizador" placeholder="Ej: info@torneos.com o +57 3201234567" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        ---
+
+        <div class="card mb-4">
+            <div class="card-header">Formato del Torneo</div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">¿El torneo tendrá **fase de grupos**?</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="tieneFaseGrupos" id="faseGruposSi" value="si">
+                        <label class="form-check-label" for="faseGruposSi">Sí</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="tieneFaseGrupos" id="faseGruposNo" value="no" checked>
+                        <label class="form-check-label" for="faseGruposNo">No (Será solo eliminación directa)</label>
+                    </div>
+                </div>
+
+                <div id="groupStageSettings" style="display: none;">
+                    <h5>Configuración de Fase de Grupos</h5>
+                    <div class="mb-3">
+                        <label for="cantidadGrupos" class="form-label">Cantidad de Grupos</label>
+                        <input type="number" class="form-control" id="cantidadGrupos" min="1" value="4">
+                    </div>
+                    <div class="mb-3">
+                        <label for="equiposPorGrupo" class="form-label">Equipos por Grupo</label>
+                        <input type="number" class="form-control" id="equiposPorGrupo" min="2" value="4">
+                    </div>
+                    <div class="mb-3">
+                        <label for="equiposClasifican" class="form-label">Equipos que clasifican por Grupo</label>
+                        <input type="number" class="form-control" id="equiposClasifican" min="1" value="2">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">¿Fase de grupos a **ida y vuelta**?</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="idaVueltaGrupos" id="idaVueltaSi" value="si">
+                            <label class="form-check-label" for="idaVueltaSi">Sí</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="idaVueltaGrupos" id="idaVueltaNo" value="no" checked>
+                            <label class="form-check-label" for="idaVueltaNo">No (Solo ida)</label>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            ---
+                            <input class="form-check-input" type="checkbox" id="tieneSegundaFaseGrupos">
+                            <label class="form-check-label" for="tieneSegundaFaseGrupos">
+                                ¿Hay una segunda fase de grupos?
+                            </label>
+                            ---
+                        </div>
+                    </div>
+                    <div id="secondGroupStageSettings" style="display: none; margin-top: 20px;">
+                        <h5>Configuración de Segunda Fase de Grupos</h5>
+                        <div class="mb-3">
+                            <label for="cantidadGrupos2" class="form-label">Cantidad de Grupos</label>
+                            <input type="number" class="form-control" id="cantidadGrupos2" min="1" value="2">
+                        </div>
+                        <div class="mb-3">
+                            <label for="equiposPorGrupo2" class="form-label">Equipos por Grupo</label>
+                            <input type="number" class="form-control" id="equiposPorGrupo2" min="2" value="3">
+                        </div>
+                        <div class="mb-3">
+                            <label for="equiposClasifican2" class="form-label">Equipos que clasifican por Grupo</label>
+                            <input type="number" class="form-control" id="equiposClasifican2" min="1" value="1">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">¿Fase de grupos a <strong>ida y vuelta</strong>?</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="idaVueltaGrupos2" id="idaVueltaSi2" value="si">
+                                <label class="form-check-label" for="idaVueltaSi2">Sí</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="idaVueltaGrupos2" id="idaVueltaNo2" value="no" checked>
+                                <label class="form-check-label" for="idaVueltaNo2">No (Solo ida)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">¿El torneo tendrá fase de **eliminación directa**?</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="tieneEliminacionDirecta" id="elimDirectaSi" value="si" checked>
+                        <label class="form-check-label" for="elimDirectaSi">Sí</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="tieneEliminacionDirecta" id="elimDirectaNo" value="no">
+                        <label class="form-check-label" for="elimDirectaNo">No (Será solo fase de grupos)</label>
+                    </div>
+                </div>
+
+                <div id="eliminationStageSettings" style="display: block;">
+                    <h5>Configuración de Eliminación Directa</h5>
+                    <div class="mb-3">
+                        <label for="rondaInicialEliminacion" class="form-label">Ronda inicial de Eliminación Directa</label>
+                        <select class="form-select" id="rondaInicialEliminacion" required>
+                            <option value="final">Final</option>
+                            <option value="semifinales">Semifinales (4 equipos)</option>
+                            <option value="cuartos">Cuartos de Final (8 equipos)</option>
+                            <option value="octavos">Octavos de Final (16 equipos)</option>
+                            <option value="dieciseisavos">Dieciseisavos de Final (32 equipos)</option>
+                            </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">¿Habrá partido por el 3er Puesto?</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="partido3erPuesto" id="tercerPuestoSi" value="si">
+                            <label class="form-check-label" for="tercerPuestoSi">Sí</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="partido3erPuesto" id="tercerPuestoNo" value="no" checked>
+                            <label class="form-check-label" for="tercerPuestoNo">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        ---
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button type="button" class="btn btn-secondary me-md-2" onclick="window.history.back()">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+    <!-- Scripts específicos para la home -->
+    <script src="{{ url_for('static', filename='js/edit_torneo.js') }}"></script>
+{% endblock %}
