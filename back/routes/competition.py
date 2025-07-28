@@ -7,7 +7,7 @@ from datetime import datetime
 from bson import ObjectId
 from functools import wraps
 from pymongo import MongoClient
-from models.torunaments import Tournament 
+from models.torunaments import Tournament
 
 # --- Blueprint Initialization ---
 tournament_bp = Blueprint('competition', __name__)
@@ -17,6 +17,8 @@ client = MongoClient(os.getenv("MONGO_URI"))
 db = client.sports_web
 
 # --- Decorators ---
+
+
 def admin_required(f):
     """
     Decorator to ensure that only super users can access certain routes.
@@ -29,6 +31,7 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+
 def validar_correo(email):
     patron = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     if re.fullmatch(patron, email):
@@ -39,6 +42,8 @@ def validar_correo(email):
 # --- Tournament Routes ---
 
 # --- GET Endpoints ---
+
+
 @tournament_bp.route('/list', methods=['GET'])
 @admin_required
 def get_tournaments():
@@ -48,11 +53,13 @@ def get_tournaments():
     """
     try:
         result = Tournament.find_all_tournament()
-        print("----find_all_tournament-----", result) # Consider using a proper logger instead of print
+        # Consider using a proper logger instead of print
+        print("----find_all_tournament-----", result)
         return jsonify(result)
-        
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 @tournament_bp.route('/<tournament_id>', methods=['GET'])
 @admin_required
@@ -63,18 +70,20 @@ def get_tournament(tournament_id):
     """
     try:
         torneo = Tournament.find_tournament(tournament_id)
-        print(torneo) # Consider using a proper logger instead of print
+        print(torneo)  # Consider using a proper logger instead of print
         if not torneo:
             return jsonify({"error": "Torneo no encontrado"}), 404
-        
+
         # Convert ObjectId and datetime objects for JSON serialization
         torneo['_id'] = str(torneo['_id'])
         if 'fechaInicio' in torneo and isinstance(torneo['fechaInicio'], datetime):
-            torneo['fechaInicio'] = torneo['fechaInicio'].isoformat() # Ensure date is correctly formatted
-            
+            # Ensure date is correctly formatted
+            torneo['fechaInicio'] = torneo['fechaInicio'].isoformat()
+
         return jsonify(torneo)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 @tournament_bp.route('/config/<tournament_id>/squads', methods=['GET'])
 @admin_required
@@ -92,6 +101,8 @@ def get_squads_config(tournament_id):
         return jsonify({"error": str(e)}), 500
 
 # --- POST Endpoints ---
+
+
 @tournament_bp.route('/torneos', methods=['POST'])
 @admin_required
 def create_tournament():
@@ -99,15 +110,16 @@ def create_tournament():
     Creates a new tournament with the provided data.
     Requires admin privileges.
     """
-    print("crear torneo") # Consider using a proper logger instead of print
+    print("crear torneo")  # Consider using a proper logger instead of print
     try:
         data = request.get_json()
-        
+
         # Basic validation for required fields
-        required_fields = ['nombre', 'tipo', 'modalidad', 'lugar', 'fechaInicio', 'temporada']
+        required_fields = ['nombre', 'tipo', 'modalidad',
+                           'lugar', 'fechaInicio', 'temporada']
         if not all(field in data for field in required_fields):
             return jsonify({"error": "Faltan campos requeridos"}), 400
-        
+
         result = Tournament.create_tournament(
             data['nombre'],
             data['tipo'],
@@ -116,11 +128,11 @@ def create_tournament():
             data['temporada'],
             data['fechaInicio'],
         )
-        
+
         if result:
             return jsonify({
                 "success": True,
-                "tournament_id": result # Assuming result is the ID of the created tournament
+                "tournament_id": result  # Assuming result is the ID of the created tournament
             })
         else:
             return jsonify({
@@ -132,6 +144,8 @@ def create_tournament():
         return jsonify({"error": str(e)}), 500
 
 # --- PUT Endpoints ---
+
+
 @tournament_bp.route('/v1/<tournament_id>', methods=['PUT'])
 @admin_required
 def update_tournament(tournament_id):
@@ -141,27 +155,32 @@ def update_tournament(tournament_id):
     """
     try:
         data = request.get_json()
-        print("-----update_torneo-------", data) # Consider using a proper logger instead of print
+        # Consider using a proper logger instead of print
+        print("-----update_torneo-------", data)
         # Convert fechaInicio string to datetime object
         if 'fechaInicio' in data and data['fechaInicio']:
             data["fechaInicio"] = datetime.fromisoformat(data['fechaInicio'])
         else:
-            data.pop('fechaInicio', None) # Remove if empty or not provided
+            data.pop('fechaInicio', None)  # Remove if empty or not provided
 
         data["actualizadoEn"] = datetime.utcnow()
         result = Tournament.update_tournaments(data, tournament_id)
         print("resultado acutalizacion-----------", result)
         if not result:
-            return jsonify({"warning": "No se realizaron cambios"}), 200 # Consider 404 if ID not found
-            
+            # Consider 404 if ID not found
+            return jsonify({"warning": "No se realizaron cambios"}), 200
+
         return jsonify({"success": True, "message": "Torneo actualizado"})
-        
+
     except Exception as e:
         print({"error": str(e)})
         return jsonify({"error": str(e)}), 500
 
 # --- DELETE Endpoints ---
-@tournament_bp.route('/delete/<tournament_id>', methods=['DELETE']) # Changed to DELETE method
+
+
+# Changed to DELETE method
+@tournament_bp.route('/delete/<tournament_id>', methods=['GET'])
 @admin_required
 def delete_tournament(tournament_id):
     """
@@ -169,6 +188,7 @@ def delete_tournament(tournament_id):
     Requires admin privileges.
     note: It's more conventional to use the DELETE HTTP method for deletion.
     """
+    print("-----delete_torneo-------", tournament_id)
     try:
         # Assuming delete_tournament returns True on success, False if not found
         success = Tournament.delete_tournament(tournament_id)

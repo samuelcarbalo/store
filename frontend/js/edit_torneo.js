@@ -23,6 +23,12 @@ async function loadTorneoData(torneoId) {
         
         const torneo = await response.json();
         console.log(torneo)
+        
+        // Formatear fecha para el input date
+        if (torneo.fechaInicio) {
+            const fecha = new Date(torneo.fechaInicio);
+            document.getElementById('fechaInicio').value = fecha.toISOString().split('T')[0];
+        }
         // Llenar formulario con los datos
         document.getElementById('torneo-id').value = torneo._id;
         document.getElementById('nombreTorneo').value = torneo.nombre || '';
@@ -33,7 +39,6 @@ async function loadTorneoData(torneoId) {
         document.getElementById('costoInscripcion').value = torneo.costoInscripcion || '';
         // document.getElementById('costoInscripcion').value = torneo.costoInscripcion || '';
         
-
         // Fechas y Ubicación
         document.getElementById('fechaFin').value = torneo.fechaFin || '';
         document.getElementById('fechaLimiteInscripcion').value = torneo.fechaLimiteInscripcion || '';
@@ -51,7 +56,7 @@ async function loadTorneoData(torneoId) {
         }
         else{
             document.getElementById('faseGruposSi').value = '';
-            document.getElementById('faseGruposNo').value = torneo.tieneFaseGrupos;
+            document.getElementById('faseGruposNo').value = false //torneo.tieneFaseGrupos;
 
         }
         document.getElementById('groupStageSettings').value = torneo.groupStageSettings || '';
@@ -60,7 +65,7 @@ async function loadTorneoData(torneoId) {
         document.getElementById('equiposClasifican').value = torneo.faseGrupos.equiposClasifican || '2';
         document.getElementById('idaVueltaSi').value = torneo.idaVueltaSi || '';
         document.getElementById('idaVueltaNo').value = torneo.idaVueltaNo || '';
-        if (torneo.faseGrupos.idaVuelta === true){
+        if (torneo.faseGrupos?.idaVuelta === true){
             idaVueltaSi.checked = torneo.faseGrupos.idaVuelta
             // Assuming 'torneo' object and 'faseGruposSi' checkbox exist
         }
@@ -68,20 +73,22 @@ async function loadTorneoData(torneoId) {
             idaVueltaSi.checked = false
 
         }
+        console.log("----------12345")
         if (torneo.faseGrupos?.segundaFase?.cantidadGrupos !== null) {
             document.getElementById('tieneSegundaFaseGrupos').checked = true;
             toggleSegundaFaseGruposVisibility(); // Mostrar formulario
-            document.getElementById('cantidadGrupos2').value = torneo.faseGrupos.segundaFase.cantidadGrupos2 || '2';
-            document.getElementById('equiposPorGrupo2').value = torneo.faseGrupos.segundaFase.equiposPorGrupo2 || '3';
-            document.getElementById('equiposClasifican2').value = torneo.faseGrupos.segundaFase.equiposClasifican2 || '1';
+            document.getElementById('cantidadGrupos2').value = torneo.faseGrupos.segundaFase?.cantidadGrupos2 || '2';
+            document.getElementById('equiposPorGrupo2').value = torneo.faseGrupos.segundaFase?.equiposPorGrupo2 || '3';
+            document.getElementById('equiposClasifican2').value = torneo.faseGrupos.segundaFase?.equiposClasifican2 || '1';
 
-            if (torneo.faseGrupos.segundaFase.idaVuelta === true) {
+            if (torneo.faseGrupos.segundaFase?.idaVuelta === true) {
                 document.getElementById('idaVueltaSi2').checked = true;
             } else {
                 document.getElementById('idaVueltaNo2').checked = true;
             }
         }
 
+        console.log("----------123456")
         // Formato del Torneo - Eliminación Directa
         
         document.getElementById('elimDirectaSi').value = torneo.elimDirectaSi || '';
@@ -135,16 +142,11 @@ async function loadTorneoData(torneoId) {
         elimDirectaSi.addEventListener('change', toggleEliminationStageVisibility);
         elimDirectaNo.addEventListener('change', toggleEliminationStageVisibility);
 
-        // Formatear fecha para el input date
-        if (torneo.fechaInicio) {
-            const fecha = new Date(torneo.fechaInicio);
-            document.getElementById('fechaInicio').value = fecha.toISOString().split('T')[0];
-        }
         
     } catch (error) {
         console.error('Error:', error);
-        alert('Error al cargar datos del torneo');
-        window.location.href = '/administrador'; // Redirigir si hay error
+        // alert('Error al cargar datos del torneo');
+        // window.location.href = '/administrador'; // Redirigir si hay error
     }
 }
 

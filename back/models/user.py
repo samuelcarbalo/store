@@ -8,6 +8,7 @@ load_dotenv()
 client = MongoClient(os.getenv("MONGO_URI"))
 db = client.sports_web
 
+
 class User:
     @staticmethod
     def create_user(email, password, name):
@@ -19,9 +20,11 @@ class User:
             "email": email,
             "password": hashed_pw,
             "name": name,
-            "favorite_sports": []
+            "favorite_sports": [],
+            "superUser": True,
+            "type": ["futbol"]
         }
-        
+
         result = db.users.insert_one(user)
         print(str(result.inserted_id))
         return str(result.inserted_id)
@@ -39,10 +42,8 @@ class User:
             {"_id": user_id},
             {"$addToSet": {"favorite_sports": sport}}
         )
-   
+
     @staticmethod
     def find_token(user_id):
         user = db.users.find_one({"_id": user_id})
         return user
-        
-    

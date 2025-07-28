@@ -139,9 +139,8 @@ async function delete_item(torneoId) {
         const response = await fetch(`/api/tournaments/delete/${torneoId}`, {
             credentials: 'include'
         });
-        
-        if (!response.ok) throw new Error('Error al cargar torneos');
         const data = await response.json();
+        if (!response.ok) throw new Error('Error al eliminar el torneo');
         window.location.reload();
 
     } catch (error) {

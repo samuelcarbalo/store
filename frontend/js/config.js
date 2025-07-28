@@ -443,7 +443,7 @@ async function generarGrupos(torneoId) {
     }
 
     try {
-        const response = await fetch(`/api/tournaments/${torneoId}/generate-groups`, {
+        const response = await fetch(`/api/roster/${torneoId}/generate-groups`, {
             method: 'POST',
         });
 
@@ -489,35 +489,53 @@ async function cargarGrupos(torneoId) {
             } else {
                 colClass = 'col-md-6 col-lg-4'; // Para múltiples columnas
             }
+
             grupos.forEach(grupo => {
-                // Start building the table HTML
-                let equiposHtml = '<table class="table table-hover">'; // Added Bootstrap table classes
-                equiposHtml += '<tbody>'; // Table body
+                const colClass = 'col-12 col-md-6 col-lg-6';
+
+                let equiposHtml = '<div class="table-responsive">';
+                equiposHtml += '<table class="table table-hover table-striped table-fixed-layout">';
                 equiposHtml += `<thead>
-                        <tr>
-                            <th>Logo</th>
-                            <th>Nombre</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>`
+                                    <tr>
+                                        <th>Logo</th>
+                                        <th>Nombre</th>
+                                        <th>Pj</th>
+                                        <th>Pg</th>
+                                        <th>Pe</th>
+                                        <th>Pp</th>
+                                        <th>Gf</th>
+                                        <th>Gc</th>
+                                        <th>Dg</th>
+                                        <th>Puntos</th>
+                                    </tr>
+                                </thead>`;
+                equiposHtml += '<tbody>';
+
                 grupo.squads.forEach(equipo => {
                     const logo = equipo.logo ?
                         `<img src="${equipo.logo}" alt="${equipo.squad_name}" class="me-2" style="height:20px; width:20px; object-fit:contain;">` :
                         '<i class="fas fa-shield-alt fa-fw me-2"></i>';
 
+                    // *** CAMBIO AQUÍ: Usar .trim() en squad_name ***
+                    const cleanedSquadName = equipo.squad_name ? equipo.squad_name.trim() : 'Nombre no disponible';
+
                     equiposHtml += `
                         <tr>
                             <td>${logo}</td>
-                            <td>${equipo.squad_name}</td>
-                            <td>${equipo.squad_name}</td>
-                            <td>${equipo.squad_name}</td>
-                            <td>${equipo.squad_name}</td>
-                        </tr>
+                            <td style="word-break: break-word; white-space: normal;">${cleanedSquadName}</td>
+                            <td>${equipo.pj}</td>
+                            <td>${equipo.pg}</td>
+                            <td>${equipo.pe}</td>
+                            <td>${equipo.pp}</td>
+                            <td>${equipo.gf}</td>
+                            <td>${equipo.gc}</td>
+                            <td>${equipo.dg}</td>
+                            <td>${equipo.pts}</td>
+                            </tr>
                     `;
                 });
-                equiposHtml += '</tbody></table>'; // Close table body and table
+                equiposHtml += '</tbody></table>';
+                equiposHtml += '</div>';
 
                 const col = document.createElement('div');
                 col.className = `${colClass} mb-4`;
@@ -525,9 +543,10 @@ async function cargarGrupos(torneoId) {
                 col.innerHTML = `
                     <div class="card h-100">
                         <div class="card-header bg-primary text-white">
-                            <strong>${grupo.squad_name}</strong>
+                            <strong>Grupo ${grupo.squad_name}</strong>
                         </div>
-                        <div class="card-body p-0">  ${equiposHtml}
+                        <div class="card-body p-0">
+                            ${equiposHtml}
                         </div>
                     </div>
                 `;

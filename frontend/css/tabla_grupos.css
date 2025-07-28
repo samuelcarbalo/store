@@ -1,0 +1,28 @@
+.table-responsive td {
+    word-break: break-word;
+    white-space: normal;
+    /* Permite el salto de línea */
+}
+
+/* Puedes quitar el max-width si quieres que el navegador ajuste
+   automáticamente, o mantenerlo si sientes que las columnas numéricas
+   se estiran demasiado. Con word-break: break-word, el texto se ajustará. */
+.table-responsive th,
+.table-responsive td {
+    max-width: 150px;
+    /* Esto es opcional, ajusta si es necesario */
+}
+
+/* Elimina todo el bloque .table-fixed-layout si no lo usas */
+/*
+.table-fixed-layout {
+    table-layout: fixed;
+    width: 100%;
+}
+.table-fixed-layout th,
+.table-fixed-layout td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+*/
