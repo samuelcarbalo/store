@@ -10,6 +10,7 @@ load_dotenv()
 client = MongoClient(os.getenv("MONGO_URI"))
 db = client.sports_web
 
+
 class Tournament:
     @staticmethod
     def create_tournament(nombre, tipo, modalidad, lugar, temporada, fechaInicio):
@@ -46,10 +47,12 @@ class Tournament:
         result = db.tournaments.insert_one(tournament)
         try:
             if result.acknowledged:
-                print(f"Document inserted successfully. ID: {result.inserted_id}")
+                print(
+                    f"Document inserted successfully. ID: {result.inserted_id}")
                 # This will work because insert_result is an InsertOneResult object
                 print(f"Type of inserted_id: {type(result.inserted_id)}")
-                returned_id_str = str(result.inserted_id) # This line will NOT cause an error
+                # This line will NOT cause an error
+                returned_id_str = str(result.inserted_id)
                 print(f"Returned ID as string: {returned_id_str}")
                 return returned_id_str
             else:
@@ -62,7 +65,7 @@ class Tournament:
     def find_tournament(tournament_id):
         tournament = db.tournaments.find_one({"_id": tournament_id})
         return tournament
-   
+
     @staticmethod
     def find_tournament_squads(tournament_id):
         tournament = db.tournaments.find_one({"_id": ObjectId(tournament_id)})
@@ -76,8 +79,8 @@ class Tournament:
                 "squad_email": 1,
                 "squad_phone": 1,
                 "torneo_id": 1,
-                }
-            ))
+            }
+        ))
         result = {}
         if tournament:
             if "cupoEquipos" in tournament:
@@ -85,7 +88,7 @@ class Tournament:
             else:
                 result["cupoEquipos"] = 8
         for squad in list_squads:
-            squad.pop("plantilla", None) 
+            squad.pop("plantilla", None)
             squad["_id"] = str(squad["_id"])
         result["squads"] = list_squads
         return result
@@ -98,24 +101,24 @@ class Tournament:
             torneo['_id'] = str(torneo['_id'])
             torneo['fechaInicio'] = torneo['fechaInicio']
         return tournament
-        
+
     @staticmethod
     def find_tournament(_id):
         torneo = db.tournaments.find_one({"_id": ObjectId(_id)})
         print(torneo, "find_tournament...")
         return torneo
-    
+
     @staticmethod
     def update_tournaments(data, torneo_id):
         update_data = data
         # Eliminar campos None
         update_data = {k: v for k, v in update_data.items() if v is not None}
-        
+
         result = db.tournaments.update_one(
             {"_id": ObjectId(torneo_id)},
             {"$set": update_data}
         )
-        
+
         if result.modified_count == 0:
             return None
         else:
@@ -151,32 +154,24 @@ class Tournament:
                         res = db.squads.insert_one(squad)
                 elif current_cantd > cantd:
                     diff = current_cantd - cantd
-                    delete_item_ids = [] # Store ObjectIds for deletion
+                    delete_item_ids = []  # Store ObjectIds for deletion
                     for _ in range(diff):
                         if list_squads:
                             # Corrected line: Call .pop() to get the item
                             removed_item = list_squads.pop()
-                            delete_item_ids.append(removed_item["_id"]) # Append the ObjectId
+                            # Append the ObjectId
+                            delete_item_ids.append(removed_item["_id"])
 
                     if delete_item_ids:
                         # Delete many documents by their IDs
-                        db.squads.delete_many({"_id": {"$in": delete_item_ids}})
+                        db.squads.delete_many(
+                            {"_id": {"$in": delete_item_ids}})
             return result
 
     @staticmethod
     def delete_tournament(_id):
+        print("delete tournament")
         torneo = db.tournaments.delete_one({"_id": ObjectId(_id)})
         return {
             "deleted": True
         }
-
-    
-
-
-
-
-
-
-
-
-    

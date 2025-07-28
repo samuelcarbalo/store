@@ -40,8 +40,9 @@ document.getElementById('registerForm').addEventListener('submit', async functio
     console.log('Resultado registro:', result);
     
     if (response.ok) {
-      alert('Registro exitoso!');
+      // alert('Registro exitoso!');
       // Cierra el modal
+      const function_login = handleLogin(email, password)
       var registerModal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
       registerModal.hide();
       
