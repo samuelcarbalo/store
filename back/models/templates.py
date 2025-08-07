@@ -145,8 +145,9 @@ class Template:
 
     @staticmethod
     def delete_groups(tournament_id):
+        tournament_ = str(tournament_id)
         group = db.groups.delete_many(
-            {"tournament_id": ObjectId(tournament_id)})
+            {"template_id": ObjectId(tournament_)})
         return {
             "deleted": True
         }

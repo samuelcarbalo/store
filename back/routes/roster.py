@@ -167,6 +167,7 @@ def generate_random_groups(template_id):
     try:
         list_squads = Template.find_template_squads(template_id)
         torneo = Tournament.find_tournament(template_id)
+        group_delete = Template.delete_groups(template_id)
         if not torneo or not torneo.get('tieneFaseGrupos'):
             return jsonify({"error": "Este torneo no tiene configurada una fase de grupos."}), 400
         # 2. Obtener datos de la fase de grupos
@@ -178,7 +179,6 @@ def generate_random_groups(template_id):
 
         if not list_squads:
             return jsonify({"error": "Jugador no encontrado"}), 404
-        group_delete = Template.delete_groups(template_id)
         squads = list_squads["squads"]
         random.shuffle(squads)
         # 6. Distribuir equipos en grupos (Round-robin)
