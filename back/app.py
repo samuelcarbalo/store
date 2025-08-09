@@ -12,6 +12,7 @@ from routes.competition import tournament_bp
 from routes.groups import squad_bp
 from routes.sports import sports_bp
 from routes.roster import roster_bp
+from routes.stats import stats_bp
 from pathlib import Path
 # from back.routes.competition import tournament_bp
 
@@ -50,6 +51,7 @@ app.register_blueprint(tournament_bp, url_prefix='/api/tournaments')
 app.register_blueprint(roster_bp, url_prefix='/api/roster')
 app.register_blueprint(squad_bp, url_prefix='/api/groups')
 app.register_blueprint(sports_bp, url_prefix='/api/sports')
+app.register_blueprint(stats_bp, url_prefix='/api/stats')
 
 @app.route('/')
 def home():
