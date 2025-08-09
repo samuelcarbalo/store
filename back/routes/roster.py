@@ -131,7 +131,10 @@ def get_player_edit(template_id, squad_id, user_id):
 def update_player_edit(template_id, squad_id, user_id):
     try:
         data = request.get_json()
-        email = data["squad_email"]
+        print(data)
+        email = data.get("email", None)
+        if not email:
+            return jsonify({"error": "El correo es requerido"}), 400
         if email:
             validate_ = validar_correo(email)
             if validate_ == False:
