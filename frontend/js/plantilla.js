@@ -223,7 +223,8 @@ async function guardarJugador() {
             body: JSON.stringify(equipoData)
         });
         const data = await response.json();
-        if (!response.ok) throw new Error(data.warning);
+        console.log('Response:', data);
+        if (!response.ok) throw new Error(data.error);
         alert(data.message || 'Equipo guardado correctamente');
         
         // Cerrar modal y recargar
